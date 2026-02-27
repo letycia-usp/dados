@@ -28,7 +28,6 @@
             @else
               <td>-</td>
               <td>-</td>
-              <td>-</td>
             @endif 
             <td class="text-center">{{ date('d/m/Y', strtotime($membro['dtainimdt'] ))  }} <br> até <br> {{ date('d/m/Y', strtotime($membro['dtafimmdt']))}} </td>
             
