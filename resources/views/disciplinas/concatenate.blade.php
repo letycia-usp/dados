@@ -15,7 +15,7 @@
         {{ $turma['nomdis'] }} - 
         Turma {{ $turma['codtur'] }}
         ({{ $turma['horario'] }}) - 
-        Prof. {{ $turma['ministrantes'] }}'
+        Prof. {{ $turma['nompes'] }}'
         <br>
     @endforeach
 

@@ -28,10 +28,9 @@
                     <tr>
                         <td>{{ $turma['coddis'] }} </td>
                         <td>{{ $turma['codtur'] }} </td>
-                        <td>{{ $turma['nomdis'] }}</td>
+                        <td>{{ $turma['nomdis']}} </td>
                         <td>{{ $turma['horario'] }} </td>
-                        <td>{{ $turma['ministrantes'] }}</td>
-                        
+                        <td>{{ $turma['nompes'] }} </td>
                     </tr>
                 @endforeach
             </tbody>
