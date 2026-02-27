@@ -106,6 +106,8 @@
                                 <tr class="border-bottom">
                                     <td class="pl-4">
                                         <strong>{{ $docente['docente']['nompes'] }}</strong>
+                                        <p><a href="https://lattes.cnpq.br/{{ $docente['docente']['idfpescpq'] }}">CV Lattes</a></p>
+                                        
                                         @if (!empty($docente['docente']['orcid']))
                                             <div class="small text-muted">
                                                 <i class="b -orcid text-success"></i> {{ $docente['docente']['orcid'] }}
@@ -321,7 +323,11 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <a href="{{ route('lattes.exportar_detalhado', $docente['docente']['codpes']) }}"
+                            <a href="{{ route('lattes.exportar_detalhado', [
+                                'codpes' => $docente['docente']['codpes'],
+                                'nompes' => $docente['docente']['nompes']
+                                ]) }}"
+
                                 class="btn btn-outline-primary">
                                 <i class="-file-excel"></i> Exportar Dados Detalhados
                             </a>

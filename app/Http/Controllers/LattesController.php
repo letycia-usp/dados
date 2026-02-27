@@ -30,7 +30,7 @@ class LattesController extends Controller
 
     public function dashboard(Request $request)
     {
-        $limit = 5; // Or your desired limit
+        $limit = 10; // Or your desired limit
         $busca = $request->input('busca');
         $departamento_filtro = $request->input('departamento');
         $page = $request->input('page', 1, FILTER_VALIDATE_INT);
@@ -54,6 +54,26 @@ class LattesController extends Controller
             $page,
             ['path' => url()->current(), 'query' => $request->query()]
         );
+        // 1. Pega os dados extras (que contêm o idfpescpq)
+        $dadosExtras = Pessoa::listarMaisInformacoesServidores("Docente");
+
+        // 2. Transforma em um mapa indexado pelo codpes para busca rápida
+        $extrasMap = collect($dadosExtras)->keyBy('codpes');
+
+        // 3. Entra na coleção do paginator e injeta o dado dentro da chave 'docente'
+        $paginator->getCollection()->transform(function ($item) use ($extrasMap) {
+            // Pegamos o codpes que já existe em $item['docente']
+            $codpes = $item['docente']['codpes'] ?? null;
+
+            if ($codpes && isset($extrasMap[$codpes])) {
+                // INSERÇÃO: Colocamos o idfpescpq DENTRO do array 'docente'
+                $item['docente']['idfpescpq'] = $extrasMap[$codpes]['idfpescpq'];
+            } else {
+                $item['docente']['idfpescpq'] = null;
+            }
+
+            return $item;
+        });
 
         return view('lattes.docentes.dashboard', [
             'docentes' => $paginator,
@@ -138,10 +158,11 @@ class LattesController extends Controller
         $codpesParcial = substr((string)$codpes, 0, 2);
         return Excel::download(new DocenteExport($codpes), "docente_{$codpesParcial}xxx.xlsx");
     }
-    public function exportarDetalhado($codpes)
+    public function exportarDetalhado(Request $request)
     {
-        $codpesParcial = substr((string)$codpes, 0, 2);
-        return Excel::download(new DocenteDetalhadoExport($codpes), "docente-detalhado_{$codpesParcial}xxx.xlsx");
+        $nompes = $request->nompes;
+        $codpes = $request->codpes;
+        return Excel::download(new DocenteDetalhadoExport($codpes), "docente-detalhado_{$nompes}.xlsx");
     }
 
     public function apiMetricas(Request $request)
